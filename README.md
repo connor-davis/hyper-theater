@@ -4,7 +4,7 @@ HyperTheater leverages the hypercore protocol to let users like yourself maybe, 
 
 #### Planned Features:
 
-- [:x:] Authentication
-- [:x:] Theater Persistence
-- [:x:] Realtime Chat
-- [:x:] Realtime Video Feed
+[:x:] Authentication
+[:x:] Theater Persistence
+[:x:] Realtime Chat
+[:x:] Realtime Video Feed
