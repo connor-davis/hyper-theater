@@ -3,8 +3,10 @@ const { app, BrowserWindow } = require('electron')
 
 const IS_DEVELOPMENT = process.env.NODE_ENV === 'development'
 
+let window, splashWindow
+
 function createMainWindow() {
-    const windowOptions = {
+    window = new BrowserWindow({
         width: 1280,
         minWidth: 1280 / 3,
         height: 720,
@@ -19,12 +21,17 @@ function createMainWindow() {
             preload: path.join(__dirname, 'preload.js'),
         },
         title: app.name,
+    })
+
+    if (IS_DEVELOPMENT) {
+        window.loadURL('http://localhost:3000')
+    } else {
+        window.loadURL(`file://${path.join(__dirname, '/index.html')}`)
     }
-    return createWindow(MAIN_WINDOW_ID, windowOptions)
 }
 
 function createSplashWindow() {
-    const windowOptions = {
+    splashWindow = new BrowserWindow({
         width: 400,
         height: 200,
         resizable: false,
@@ -33,35 +40,14 @@ function createSplashWindow() {
         show: true,
         center: true,
         title: app.name,
-    }
-
-    const window = defineWindow('splash', windowOptions)
+    })
 
     if (IS_DEVELOPMENT) {
-        window.loadURL('http://localhost:3000/splash.html').then()
+        splashWindow.loadURL('http://localhost:3000/splash.html')
     } else {
-        window.loadURL(`file://${path.join(__dirname, '/splash.html')}`).then()
+        splashWindow.loadURL(`file://${path.join(__dirname, '/splash.html')}`)
     }
-
-    return window
 }
-
-process.on('uncaughtException', (err) => {
-    console.error(err)
-    closeAllWindows()
-})
-
-app.requestSingleInstanceLock()
-
-app.on('second-instance', () => {
-    const window = getWindow(MAIN_WINDOW_ID)
-    if (window) {
-        if (window.isMinimized()) {
-            window.restore()
-        }
-        window.focus()
-    }
-})
 
 app.on('window-all-closed', () => {
     if (process.platform !== 'darwin') {
@@ -70,18 +56,18 @@ app.on('window-all-closed', () => {
 })
 
 app.on('activate', () => {
-    const window = getWindow(MAIN_WINDOW_ID)
     if (window === null) {
+        createSplashWindow()
         createMainWindow()
     }
 })
 
 app.on('ready', () => {
-    const splashWindow = createSplashWindow()
-    const mainWindow = createMainWindow()
+    createSplashWindow()
+    createMainWindow()
 
-    mainWindow.once('ready-to-show', () => {
+    window.once('ready-to-show', () => {
         splashWindow.close()
-        mainWindow.show()
+        window.show()
     })
 })
