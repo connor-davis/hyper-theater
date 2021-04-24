@@ -1,0 +1,10 @@
+{
+  "name": "hyper-theater",
+  "version": "0.0.1",
+  "description": "HyperTheater leverages the hypercore protocol to have users create theaters and view whats playing in these theaters.",
+  "main": "app/electron.js",
+  "repository": "https://github.com/connor-davis/hyper-theater",
+  "author": "Connor Davis <19422@kloofhigh.co.za>",
+  "license": "GPL-3.0",
+  "private": false
+}
